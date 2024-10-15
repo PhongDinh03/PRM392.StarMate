@@ -1,0 +1,6 @@
+@StarMate_HostAddress = http://localhost:5048
+
+GET {{StarMate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
