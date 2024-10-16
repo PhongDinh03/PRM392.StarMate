@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Infrastructure.Models;
+﻿namespace Infrastructure.Models;
 
 public partial class User
 {
@@ -21,7 +18,7 @@ public partial class User
 
     public string? ConfirmationToken { get; set; }
 
-    public bool? IsConfirmed { get; set; }
+    public bool IsConfirmed { get; set; }
 
     public int ZodiacId { get; set; }
 
