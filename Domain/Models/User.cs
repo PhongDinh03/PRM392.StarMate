@@ -10,9 +10,9 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public string? TelephoneNumber { get; set; }
+    public string TelephoneNumber { get; set; } = null!; // Update this if TelephoneNumber is not nullable
 
-    public byte? Status { get; set; }
+    public byte Status { get; set; }
 
     public string? RoleName { get; set; }
 
@@ -20,9 +20,9 @@ public partial class User
 
     public bool IsConfirmed { get; set; }
 
-    public int ZodiacId { get; set; }
+    public int? ZodiacId { get; set; }
 
-    public string Decription { get; set; } = null!;
+    public string Description { get; set; } = null!; // Corrected spelling
 
-    public int LilkeListId { get; set; }
+    public int? LikeListId { get; set; }  // Corrected spelling
 }

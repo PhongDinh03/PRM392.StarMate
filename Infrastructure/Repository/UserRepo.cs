@@ -31,12 +31,45 @@ namespace Infrastructure.Repository
 
         public async Task<User> GetUserByEmailAddressAndPasswordHash(string email, string passwordHash)
         {
+            // Validate input parameters
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException("Email cannot be null or empty", nameof(email));
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordHash))
+            {
+                throw new ArgumentException("Password hash cannot be null or empty", nameof(passwordHash));
+            }
+
+            // Ensure _dbContext and Users DbSet are not null
+            if (_dbContext == null)
+            {
+                throw new Exception("DbContext is null");
+            }
+
+            if (_dbContext.Users == null)
+            {
+                throw new Exception("Users DbSet is null");
+            }
+
+            // Retrieve the user from the database
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(record => record.Email == email && record.Password == passwordHash);
-            return user is null ? throw new Exception("Email & password is not correct") : user;
-        }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+            // Check if user is found
+            if (user is null)
+            {
+                throw new Exception("Email & password is not correct");
+            }
+
+            return user;
+        }
+    
+
+
+
+    public async Task<User> GetUserByEmailAsync(string email)
         {
             var user = await _dbContext.Users
                  .FirstOrDefaultAsync(record => record.Email == email);
