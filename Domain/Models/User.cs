@@ -1,16 +1,23 @@
-﻿namespace Infrastructure.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Infrastructure.Models;
 
 public partial class User
 {
     public int Id { get; set; }
 
+    [Required]
     public string FullName { get; set; } = null!;
 
+    [Required]
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
+    [Required]
     public string Password { get; set; } = null!;
 
-    public string TelephoneNumber { get; set; } = null!; // Update this if TelephoneNumber is not nullable
+    [Required]
+    public string TelephoneNumber { get; set; } = null!; // Consider making this nullable if needed
 
     public byte Status { get; set; }
 
@@ -22,7 +29,7 @@ public partial class User
 
     public int? ZodiacId { get; set; }
 
-    public string Description { get; set; } = null!; // Corrected spelling
+    public string? Description { get; set; } // Make nullable if DB allows nulls
 
-    public int? LikeListId { get; set; }  // Corrected spelling
+    public int? LikeListId { get; set; } // Corrected spelling
 }
