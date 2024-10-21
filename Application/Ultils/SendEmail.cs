@@ -29,8 +29,8 @@ namespace Application.Ultils
         public static async Task<bool> SendResetPass(IMemoryCache cache, string toEmail, string code, bool showExpirationTime)
         {
             var userName = "StarMate";
-            var emailFrom = "phongdvse171245@fpt.edu.vn";
-            var password = "gqae hjnt zaur zpse";
+            var emailFrom = "phongdinh930@gmail.com";
+            var password = "agrs vley salr vzwd";
 
             var subjet = "Reset Password Confirmation";
 
@@ -82,8 +82,8 @@ namespace Application.Ultils
         )
         {
             var userName = "StarMate";
-            var emailFrom = "phongdvse171245@fpt.edu.vn";
-            var password = "gqae hjnt zaur zpse";
+            var emailFrom = "phongdinh930@gmail.com";
+            var password = "agrs vley salr vzwd";
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(userName, emailFrom));
