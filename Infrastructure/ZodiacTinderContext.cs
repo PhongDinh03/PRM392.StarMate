@@ -60,7 +60,7 @@ public partial class ZodiacTinderContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                 .ValueGeneratedOnAdd()
                 .HasColumnName("id");
         });
 
