@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using StarMate.Middlewares;
 using Infrastructure.Repository;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,11 +31,12 @@ builder.Services.AddSingleton(myConfig);
 
 // Subcribe service
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //Subcribe repository
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
-builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile)); 
+builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -125,8 +127,10 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("swagger/v1/swagger.json", "StarMateWebAPI v1");
 });
+app.UseHsts();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseCors("AllowAll");
 

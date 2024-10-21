@@ -17,7 +17,7 @@ public partial class User
     public string Password { get; set; } = null!;
 
     [Required]
-    public string TelephoneNumber { get; set; } = null!; // Consider making this nullable if needed
+    public string TelephoneNumber { get; set; } = null!;
 
     public byte Status { get; set; }
 
@@ -29,7 +29,7 @@ public partial class User
 
     public int? ZodiacId { get; set; }
 
-    public string? Description { get; set; } // Make nullable if DB allows nulls
+    public string? Description { get; set; } 
 
-    public int? LikeListId { get; set; } // Corrected spelling
+    public int? LikeListId { get; set; } 
 }

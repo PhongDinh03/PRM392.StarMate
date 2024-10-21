@@ -1,5 +1,5 @@
-﻿
-using Application.ViewModels.AuthenDTO;
+﻿using Application.ViewModels.AuthenDTO;
+using Application.ViewModels.UserDTO;
 using AutoMapper;
 using Infrastructure.Models;
 
@@ -14,6 +14,8 @@ namespace Infrastructure.Mappers
             CreateMap<ResetPassDTO, User>()
                  .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
             CreateMap<User, ResetPassDTO>();
+            CreateMap<User, ViewUserDTO>().ReverseMap();
+            CreateMap<User, UpdateUserDTO>().ReverseMap();
         }
     }
 }
