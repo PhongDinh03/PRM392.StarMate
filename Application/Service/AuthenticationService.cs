@@ -165,7 +165,7 @@ namespace Application.Service
                 await _userRepo.AddAsync(userAccountRegister);
 
                 var confirmationLink =
-                    $"https://localhost:7032/swagger/confirm?token={userAccountRegister.ConfirmationToken}";
+                    $"https://starmate-g8dkcraeardagdfb.canadacentral-01.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
 
                 //SendMail
                 var emailSend = await SendEmail.SendConfirmationEmail(userObject.Email, confirmationLink);
