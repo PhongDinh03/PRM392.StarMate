@@ -32,7 +32,7 @@ namespace StarMate.Middlewares
                         user.IsConfirmed = true;
                         user.ConfirmationToken = null;
                         await repo.SaveChangeAsync();
-                        context.Response.Redirect("https://localhost:7032/swagger");
+                        context.Response.Redirect("https://starmate-g8dkcraeardagdfb.canadacentral-01.azurewebsites.net/");
                         return;
                     }
                 }
