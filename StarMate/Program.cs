@@ -13,7 +13,8 @@ using System.Reflection;
 using StarMate.Middlewares;
 using Infrastructure.Repository;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.FileProviders; // Add this line to use PhysicalFileProvider
+using Microsoft.Extensions.FileProviders;
+using Application.Services; // Add this line to use PhysicalFileProvider
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,9 @@ builder.Services.AddSingleton(myConfig);
 // Subscribe services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFriendService, FriendService>();
+builder.Services.AddScoped<IFriendRepo, FriendRepo>();
+
 
 // Subscribe repository
 builder.Services.AddScoped<IUserRepo, UserRepo>();
