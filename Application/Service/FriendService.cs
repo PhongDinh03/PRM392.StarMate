@@ -16,12 +16,14 @@ namespace Application.Services
     public class FriendService : IFriendService
     {
         private readonly IFriendRepo _Repo;
+        private readonly IUserRepo _UserRepo;
         private readonly IMapper _mapper;
 
-        public FriendService(IMapper mapper, IFriendRepo Repo)
+        public FriendService(IMapper mapper, IFriendRepo Repo, IUserRepo userRepo)
         {
-            _mapper = mapper;
-            _Repo = Repo;
+            _UserRepo = userRepo ?? throw new ArgumentNullException(nameof(userRepo));
+            _Repo = Repo ?? throw new ArgumentNullException(nameof(Repo));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ServiceResponse<List<FriendResDTO>>> GetAllFriends()
@@ -95,40 +97,72 @@ namespace Application.Services
         public async Task<ServiceResponse<FriendResDTO>> CreateFriend(FriendReqDTO createForm)
         {
             var result = new ServiceResponse<FriendResDTO>();
-            try
-            {
-                // Assuming createForm.Id should be zero for new bookings
-                if (createForm.Id != 0)
-                {
-                    var friendExist = await _Repo.GetFById(createForm.Id);
-                    if (friendExist != null)
-                    {
-                        result.Success = false;
-                        result.Message = "Friend with the same ID already exists!";
-                        return result;
-                    }
-                }
 
-              
-
-                var newFriend = _mapper.Map<Friend>(createForm); // Map directly
-                await _Repo.AddAsync(newFriend); // Assuming the database generates the ID
-
-                // Map to BookingResDTO
-                result.Data = _mapper.Map<FriendResDTO>(newFriend);
-                result.Success = true;
-                result.Message = "Friend add successfully!";
-            }
-            catch (Exception e)
+            // Validate the input
+            if (createForm == null || createForm.UserId <= 0 || createForm.FriendId <= 0 || createForm.UserId == createForm.FriendId)
             {
                 result.Success = false;
-                result.Message = e.InnerException != null
-                    ? $"{e.InnerException.Message}\n{e.StackTrace}"
-                    : $"{e.Message}\n{e.StackTrace}";
+                result.Message = "Invalid friend request data! User cannot be friends with themselves.";
+                return result;
             }
+
+            // Check if both UserId and FriendId exist in the User table
+            var userExists = await _UserRepo.GetByIdAsync(createForm.UserId);
+            var friendExists = await _UserRepo.GetByIdAsync(createForm.FriendId);
+
+            if (userExists == null)
+            {
+                result.Success = false;
+                result.Message = $"User with ID {createForm.UserId} not found in the database.";
+                return result;
+            }
+
+            if (friendExists == null)
+            {
+                result.Success = false;
+                result.Message = $"User with ID {createForm.FriendId} not found in the database.";
+                return result;
+            }
+
+            // Check if a friendship already exists
+            var existingFriendship = await _Repo.GetFriendshipByUserAndFriendId(createForm.UserId, createForm.FriendId);
+            if (existingFriendship != null)
+            {
+                result.Success = false;
+                result.Message = "Friendship already exists!";
+                return result;
+            }
+
+            // Create the new friendship
+            var newFriend = _mapper.Map<Friend>(createForm);
+            newFriend.status = false; // Set the status to false (0)
+
+            // Add the new friend relationship
+            await _Repo.AddAsync(newFriend);
+
+            // Optionally create a reciprocal friend relationship if it doesn’t exist
+            var reciprocalFriendship = await _Repo.GetFriendshipByUserAndFriendId(createForm.FriendId, createForm.UserId);
+            if (reciprocalFriendship == null)
+            {
+                var reciprocalFriend = new Friend
+                {
+                    UserId = createForm.FriendId,
+                    FriendId = createForm.UserId,
+                    status = false // Set status as needed
+                };
+
+                await _Repo.AddAsync(reciprocalFriend);
+            }
+
+            // Map the newly created friend to FriendResDTO for the response
+            result.Data = _mapper.Map<FriendResDTO>(newFriend);
+            result.Success = true;
+            result.Message = "Friend added successfully!";
 
             return result;
         }
+
+
 
 
 
@@ -224,6 +258,58 @@ namespace Application.Services
             return result;
         }
 
-     
+
+        public async Task<ServiceResponse<bool>> UpdateFriendshipStatus(int userId, int friendId)
+        {
+            var result = new ServiceResponse<bool>();
+            try
+            {
+                // Ensure status is set to true (active)
+                bool newStatus = true; // Assuming true indicates an active friendship
+
+                // Call the repository method to update the friendship status
+                var isUpdated = await _Repo.UpdateFriendshipStatus(userId, friendId, newStatus);
+
+                // Optionally, check the response from the repository
+                if (isUpdated)
+                {
+                    // Optionally update the status for the reverse friendship (friendId to userId)
+                    var isUpdatedReverse = await _Repo.UpdateFriendshipStatus(friendId, userId, newStatus);
+
+                    // Check if the reverse update was successful
+                    if (!isUpdatedReverse)
+                    {
+                        // Handle case where the reverse friendship was not found or not updated
+                        result.Success = true; // Still consider the operation successful since the main update worked
+                        result.Message = "Friendship status updated for one direction, but not for the reverse!";
+                        result.Data = true; // Return true as the primary update was successful
+                    }
+                    else
+                    {
+                        result.Success = true;
+                        result.Message = "Friendship status updated successfully in both directions!";
+                        result.Data = true; // Return true if the update was successful for both
+                    }
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = "Friendship not found or status update failed!";
+                    result.Data = false; // Return false if the update was not successful
+                }
+            }
+            catch (Exception e)
+            {
+                result.Success = false;
+                result.Message = e.InnerException != null
+                    ? $"{e.InnerException.Message}\n{e.StackTrace}"
+                    : $"{e.Message}\n{e.StackTrace}";
+            }
+
+            return result;
+        }
+
+
+
     }
 }

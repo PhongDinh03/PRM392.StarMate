@@ -17,5 +17,6 @@ namespace Application.IService
         public Task<ServiceResponse<FriendResDTO>> UpdateFriend(FriendReqDTO updateForm, int id);
         public Task<ServiceResponse<bool>> DeleteFriend(int userId, int friendId);
         public Task<ServiceResponse<List<FriendResDTO>>> GetFriendByUserId(int id);
+        Task<ServiceResponse<bool>> UpdateFriendshipStatus(int userId, int friendId);
     }
 }

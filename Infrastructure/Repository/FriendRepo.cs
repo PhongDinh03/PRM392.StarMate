@@ -59,6 +59,24 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
         }
 
+        public async Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool status)
+        {
+            // Fetch the friendship record from the database
+            var friendship = await _context.Friends
+                .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+
+            if (friendship != null)
+            {
+                // Update the status
+                friendship.status = status; // Ensure property name matches your model
+                _context.Friends.Update(friendship); // Mark the entity as modified
+                await _context.SaveChangesAsync(); // Save changes to the database
+                return true; // Indicate that the update was successful
+            }
+
+            return false; // Indicate that the friendship was not found
+        }
+
 
     }
 

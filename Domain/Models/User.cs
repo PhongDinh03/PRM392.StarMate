@@ -27,9 +27,18 @@ public partial class User
 
     public bool IsConfirmed { get; set; }
 
+    public string gender { get; set; }
+
     public int? ZodiacId { get; set; }
 
     public string? Description { get; set; } 
 
-    public int? LikeListId { get; set; } 
+    public int? LikeListId { get; set; }
+
+    public virtual Zodiac? Zodiac { get; set; }
+
+    
+    public virtual ICollection<LikeZodiac> LikedZodiacs { get; set; } = new List<LikeZodiac>();
+
+  
 }

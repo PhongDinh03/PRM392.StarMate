@@ -96,5 +96,44 @@ namespace Application.Service
 
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<List<ViewUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
+        {
+            var serviceResponse = new ServiceResponse<List<ViewUserDTO>>();
+
+            try
+            {
+                var users = await _userRepo.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender);
+
+                if (users == null || !users.Any())
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "No users found for the specified criteria.";
+                }
+                else
+                {
+                    // Manually create ViewUserDTO list to include Zodiac details
+                    serviceResponse.Data = users.Select(user => new ViewUserDTO
+                    {
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        Password = user.Password,
+                        TelephoneNumber = user.TelephoneNumber,
+                        ZodiacId = user.ZodiacId ?? 0,
+                        NameZodiac = user.Zodiac?.NameZodiac ?? "Unknown", // Handle null case
+                        Decription = user.Zodiac?.DesZodiac
+                    }).ToList();
+
+                    serviceResponse.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = $"Failed to retrieve users: {ex.Message}";
+            }
+
+            return serviceResponse;
+        }
     }
 }

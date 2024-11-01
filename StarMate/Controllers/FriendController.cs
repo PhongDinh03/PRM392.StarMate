@@ -71,5 +71,17 @@ namespace StarMate.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+
+        [HttpPut("status/{userId}/{friendId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateFriendshipStatus(int userId, int friendId)
+        {
+            var response = await _friendService.UpdateFriendshipStatus(userId, friendId);
+
+            if (!response.Success)
+                return NotFound(response);
+
+            return Ok(response);
+        }
+
     }
 }

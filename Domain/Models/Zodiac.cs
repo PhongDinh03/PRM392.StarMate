@@ -10,4 +10,7 @@ public partial class Zodiac
     public string NameZodiac { get; set; } = null!;
 
     public string DesZodiac { get; set; } = null!;
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<LikeZodiac> LikedByUsers { get; set; } = new List<LikeZodiac>();
 }

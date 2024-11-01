@@ -19,7 +19,7 @@ using Application.Services; // Add this line to use PhysicalFileProvider
 var builder = WebApplication.CreateBuilder(args);
 
 // Set the web root path
-builder.WebHost.UseWebRoot("wwwroot"); // Set the correct web root path
+//builder.WebHost.UseWebRoot("wwwroot"); // Set the correct web root path
 
 // Add services to the container.
 builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
