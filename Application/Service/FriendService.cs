@@ -40,6 +40,7 @@ namespace Application.Services
                     Id = c.Id,
                     UserId = c.UserId,
                     FriendId = c.FriendId,
+                    
                     ZodiacName = c.FriendNavigation.Zodiac.NameZodiac
                 }).ToList();
 
@@ -260,6 +261,7 @@ namespace Application.Services
                     Id = c.Id,
                     UserId = c.UserId,
                     FriendId = c.FriendId,
+                    FriendGender = c.FriendNavigation?.Gender ?? "Unknown",
                     FriendName = c.FriendNavigation?.FullName ?? "Unknown", // Check for null and provide a default
                     ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown" // Check for null and provide a default
                 }).ToList();

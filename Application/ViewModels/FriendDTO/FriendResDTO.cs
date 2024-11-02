@@ -17,6 +17,8 @@ namespace Application.ViewModels.FriendDTO
 
         public string FriendName { get; set; }
 
+        public string FriendGender { get; set; }
+
         public string ZodiacName { get; set; }
     }
 }
