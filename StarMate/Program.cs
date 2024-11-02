@@ -3,7 +3,6 @@ using Application.IRepository;
 using Application.IService;
 using Application.Service;
 using Infrastructure.Mappers;
-using Infrastructure.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +13,8 @@ using StarMate.Middlewares;
 using Infrastructure.Repository;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.FileProviders;
-using Application.Services; // Add this line to use PhysicalFileProvider
+using Application.Services;
+using Infrastructure; // Add this line to use PhysicalFileProvider
 
 var builder = WebApplication.CreateBuilder(args);
 

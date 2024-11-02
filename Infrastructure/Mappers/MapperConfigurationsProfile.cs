@@ -2,7 +2,7 @@
 using Application.ViewModels.FriendDTO;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
-using Infrastructure.Models;
+using Domain.Models;
 
 namespace Infrastructure.Mappers
 {
@@ -22,7 +22,10 @@ namespace Infrastructure.Mappers
             CreateMap<Zodiac, ViewUserDTO>().ReverseMap();
             CreateMap<User, UpdateUserDTO>().ReverseMap();
             CreateMap<Friend, FriendReqDTO>().ReverseMap();
-            CreateMap<Friend, FriendResDTO>().ReverseMap();
+            CreateMap<Friend, FriendResDTO>()
+            .ForMember(dest => dest.FriendName, opt => opt.MapFrom(src => src.FriendNavigation.FullName))
+            .ReverseMap();
+
         }
     }
 }

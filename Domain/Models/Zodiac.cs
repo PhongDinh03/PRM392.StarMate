@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Models;
+namespace Domain.Models;
 
-public partial class Zodiac
+public  class Zodiac
 {
     public int Id { get; set; }
 
@@ -11,6 +11,7 @@ public partial class Zodiac
 
     public string DesZodiac { get; set; } = null!;
 
+    public virtual ICollection<LikeZodiac> LikeZodiacs { get; set; } = new List<LikeZodiac>();
+
     public virtual ICollection<User> Users { get; set; } = new List<User>();
-    public virtual ICollection<LikeZodiac> LikedByUsers { get; set; } = new List<LikeZodiac>();
 }

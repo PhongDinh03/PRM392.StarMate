@@ -4,7 +4,7 @@ using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
-using Infrastructure.Models;
+using Domain.Models;
 
 namespace Application.Service
 {

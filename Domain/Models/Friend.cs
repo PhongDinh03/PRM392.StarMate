@@ -1,6 +1,9 @@
-﻿namespace Infrastructure.Models;
+﻿using System;
+using System.Collections.Generic;
 
-public partial class Friend
+namespace Domain.Models;
+
+public  class Friend
 {
     public int Id { get; set; }
 
@@ -8,7 +11,9 @@ public partial class Friend
 
     public int FriendId { get; set; }
 
-    public bool? status { get; set; }
-    public virtual User FriendUser { get; set; } = null!;
+    public bool? Status { get; set; }
 
+    public virtual User FriendNavigation { get; set; } = null!;
+
+    public virtual User User { get; set; } = null!;
 }

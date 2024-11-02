@@ -1,5 +1,5 @@
 ﻿using Application.IRepository;
-using Infrastructure.Models;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -95,7 +95,7 @@ namespace Infrastructure.Repository
             // Retrieve users based on zodiac IDs and gender
             var users = await _dbContext.Users
                 .Where(u => zodiacIds.Contains(u.ZodiacId.GetValueOrDefault()) &&
-                            u.gender.ToLower() == normalizedGender)
+                            u.Gender.ToLower() == normalizedGender)
                 .Include(u => u.Zodiac) // Ensure Zodiac is included
                 .ToListAsync();
 

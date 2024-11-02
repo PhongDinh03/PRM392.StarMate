@@ -1,7 +1,6 @@
 ﻿
 using Application.IRepository;
-
-using Infrastructure.Models;
+using Domain.Models;
 using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Infrastructure.Repository
 {
@@ -35,24 +35,27 @@ namespace Infrastructure.Repository
         }
         public async Task<List<Friend>> GetFByUserId(int userId)
         {
+            // Validate user ID
             if (userId <= 0)
             {
-                throw new ArgumentException("Invalid user ID.");
+                throw new ArgumentException("Invalid user ID.", nameof(userId));
             }
 
+            // Retrieve friends and include the FriendUser details
             var friends = await _context.Friends
-                .Where(b => b.UserId == userId)
-                .Include(f => f.FriendUser)
+                .Include(f => f.FriendNavigation) // Include friend user details
+                .Where(f => f.UserId == userId)
                 .ToListAsync();
 
+            // Check if no friends were found
             if (friends == null || !friends.Any())
             {
-               
-                Console.WriteLine($"No friend found for user ID: {userId}");
+                Console.WriteLine($"No friends found for user ID: {userId}");
             }
 
-            return friends;
+            return friends; // Return the list of friends
         }
+
 
         public async Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId)
         {
@@ -69,7 +72,7 @@ namespace Infrastructure.Repository
             if (friendship != null)
             {
                 // Update the status
-                friendship.status = status; // Ensure property name matches your model
+                friendship.Status = status; // Ensure property name matches your model
                 _context.Friends.Update(friendship); // Mark the entity as modified
                 await _context.SaveChangesAsync(); // Save changes to the database
                 return true; // Indicate that the update was successful

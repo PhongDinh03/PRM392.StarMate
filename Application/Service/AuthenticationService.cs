@@ -5,7 +5,7 @@ using Application.ServiceResponse;
 using Application.Ultils;
 using Application.ViewModels.AuthenDTO;
 using AutoMapper;
-using Infrastructure.Models;
+using Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System.Data.Common;
 

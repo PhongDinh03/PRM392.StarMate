@@ -1,5 +1,5 @@
 ﻿using Application.Commons;
-using Infrastructure.Models;
+using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

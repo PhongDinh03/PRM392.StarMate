@@ -4,7 +4,7 @@ using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels.FriendDTO;
 using AutoMapper;
-using Infrastructure.Models;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -135,7 +135,7 @@ namespace Application.Services
 
             // Create the new friendship
             var newFriend = _mapper.Map<Friend>(createForm);
-            newFriend.status = false; // Set the status to false (0)
+            newFriend.Status = false; // Set the status to false (0)
 
             // Add the new friend relationship
             await _Repo.AddAsync(newFriend);
@@ -148,7 +148,7 @@ namespace Application.Services
                 {
                     UserId = createForm.FriendId,
                     FriendId = createForm.UserId,
-                    status = false // Set status as needed
+                    Status = false // Set status as needed
                 };
 
                 await _Repo.AddAsync(reciprocalFriend);
@@ -231,19 +231,35 @@ namespace Application.Services
         public async Task<ServiceResponse<List<FriendResDTO>>> GetFriendByUserId(int userId)
         {
             var result = new ServiceResponse<List<FriendResDTO>>();
+
             try
             {
+                // Validate user ID
+                if (userId <= 0)
+                {
+                    throw new ArgumentException("Invalid user ID.", nameof(userId));
+                }
+
                 // Retrieve friends for the specified userId
                 var friends = await _Repo.GetFByUserId(userId);
                 Console.WriteLine($"Friends retrieved for UserId {userId}: {friends?.Count ?? 0}");
+
+                // Check if friends were found
+                if (friends == null || !friends.Any())
+                {
+                    result.Success = false;
+                    result.Message = $"No friends found for user ID: {userId}";
+                    return result;
+                }
 
                 // Map the friend list to FriendResDTO
                 var friendList = friends.Select(c => new FriendResDTO
                 {
                     Id = c.Id,
                     UserId = c.UserId,
+               // Name of the user requesting the friend list
                     FriendId = c.FriendId,
-                    FriendName = c.FriendUser.FullName
+                    FriendName = c.FriendNavigation.FullName // Name of the friend
                 }).ToList();
 
                 // Set the response data

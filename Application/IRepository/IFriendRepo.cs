@@ -1,5 +1,5 @@
 
-using Infrastructure.Models;
+using Domain.Models;
 
 namespace Application.IRepository;
 public interface IFriendRepo : IGenericRepo<Friend>
