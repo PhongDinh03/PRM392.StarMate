@@ -28,10 +28,10 @@ namespace Infrastructure.Repository
         }
 
 
-        public async Task<Friend?> GetFById(int userId)
+        public async Task<Friend?> GetFById(int id)
         {
             return await _context.Friends
-                .FirstOrDefaultAsync(m => m.Id == userId);
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
         public async Task<List<Friend>> GetFByUserId(int userId)
         {
@@ -42,6 +42,7 @@ namespace Infrastructure.Repository
 
             var friends = await _context.Friends
                 .Where(b => b.UserId == userId)
+                .Include(f => f.FriendUser)
                 .ToListAsync();
 
             if (friends == null || !friends.Any())

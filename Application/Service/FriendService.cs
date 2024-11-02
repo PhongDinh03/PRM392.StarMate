@@ -243,6 +243,7 @@ namespace Application.Services
                     Id = c.Id,
                     UserId = c.UserId,
                     FriendId = c.FriendId,
+                    FriendName = c.FriendUser.FullName
                 }).ToList();
 
                 // Set the response data
