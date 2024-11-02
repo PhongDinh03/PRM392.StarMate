@@ -40,6 +40,7 @@ namespace Application.Services
                     Id = c.Id,
                     UserId = c.UserId,
                     FriendId = c.FriendId,
+                    ZodiacName = c.FriendNavigation.Zodiac.NameZodiac
                 }).ToList();
 
                 // Set the response data
@@ -76,6 +77,7 @@ namespace Application.Services
                     Id = friend.Id,
                     UserId=friend.UserId,
                     FriendId = friend.FriendId,
+                    ZodiacName = friend.FriendNavigation.Zodiac.NameZodiac
                     };
 
                     result.Data = resFriend;
@@ -257,9 +259,9 @@ namespace Application.Services
                 {
                     Id = c.Id,
                     UserId = c.UserId,
-               // Name of the user requesting the friend list
                     FriendId = c.FriendId,
-                    FriendName = c.FriendNavigation.FullName // Name of the friend
+                    FriendName = c.FriendNavigation?.FullName ?? "Unknown", // Check for null and provide a default
+                    ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown" // Check for null and provide a default
                 }).ToList();
 
                 // Set the response data
@@ -269,11 +271,12 @@ namespace Application.Services
             catch (Exception e)
             {
                 result.Success = false;
-                result.Message = $"An error occurred while retrieving friends: {e.Message}\n{e.StackTrace}";
+                result.Message = $"An error occurred while retrieving friends for user ID {userId}: {e.Message}\n{e.StackTrace}";
             }
 
             return result;
         }
+
 
 
         public async Task<ServiceResponse<bool>> UpdateFriendshipStatus(int userId, int friendId)

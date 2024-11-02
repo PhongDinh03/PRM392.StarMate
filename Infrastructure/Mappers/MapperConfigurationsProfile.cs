@@ -23,8 +23,10 @@ namespace Infrastructure.Mappers
             CreateMap<User, UpdateUserDTO>().ReverseMap();
             CreateMap<Friend, FriendReqDTO>().ReverseMap();
             CreateMap<Friend, FriendResDTO>()
-            .ForMember(dest => dest.FriendName, opt => opt.MapFrom(src => src.FriendNavigation.FullName))
-            .ReverseMap();
+     .ForMember(dest => dest.FriendName, opt => opt.MapFrom(src => src.FriendNavigation.FullName))
+     .ForMember(dest => dest.ZodiacName, opt => opt.MapFrom(src => src.FriendNavigation.Zodiac.NameZodiac)) // Assuming ZodiacName exists
+     .ReverseMap();
+
 
         }
     }
