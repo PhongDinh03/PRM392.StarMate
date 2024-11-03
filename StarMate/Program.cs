@@ -11,8 +11,6 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using StarMate.Middlewares;
 using Infrastructure.Repository;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.FileProviders;
 using Application.Services;
 using Infrastructure; // Add this line to use PhysicalFileProvider
 
@@ -37,11 +35,14 @@ builder.Services.AddSingleton(myConfig);
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
-builder.Services.AddScoped<IFriendRepo, FriendRepo>();
+builder.Services.AddScoped<ILikeZodiacService, LikeZodiacService>();
 
 
 // Subscribe repository
 builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IFriendRepo, FriendRepo>();
+builder.Services.AddScoped<ILikeZodiacRepo, LikeZodiacRepo>();
+
 
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
 builder.Services.AddControllers();

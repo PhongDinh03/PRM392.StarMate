@@ -1,4 +1,3 @@
-
 using Domain.Models;
 
 namespace Application.IRepository;
