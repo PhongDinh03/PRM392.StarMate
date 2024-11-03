@@ -15,5 +15,9 @@ namespace Application.ViewModels.AuthenDTO
         public string Password { get; set; }
         public string FullName { get; set; }
         public string TelephoneNumber { get; set; }
+
+        public string gender { get; set; }
+
+        public int? ZodiacId { get; set; }
     }
 }

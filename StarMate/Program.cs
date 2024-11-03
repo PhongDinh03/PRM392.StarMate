@@ -1,9 +1,8 @@
-using Application.Commons;
+﻿using Application.Commons;
 using Application.IRepository;
 using Application.IService;
 using Application.Service;
 using Infrastructure.Mappers;
-using Infrastructure.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +12,14 @@ using System.Reflection;
 using StarMate.Middlewares;
 using Infrastructure.Repository;
 using System.Text.Json.Serialization;
-
+using Microsoft.Extensions.FileProviders;
+using Application.Services;
+using Infrastructure; // Add this line to use PhysicalFileProvider
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set the web root path
+//builder.WebHost.UseWebRoot("wwwroot"); // Set the correct web root path
 
 // Add services to the container.
 builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
@@ -29,11 +33,14 @@ builder.Services.AddDbContext<ZodiacTinderContext>(options =>
 
 builder.Services.AddSingleton(myConfig);
 
-// Subcribe service
+// Subscribe services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFriendService, FriendService>();
+builder.Services.AddScoped<IFriendRepo, FriendRepo>();
 
-//Subcribe repository
+
+// Subscribe repository
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfigurationsProfile));
@@ -78,7 +85,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddSwaggerGen(c =>
 {
-
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
@@ -112,7 +118,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -126,6 +131,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("swagger/v1/swagger.json", "StarMateWebAPI v1");
+    c.RoutePrefix = string.Empty;
 });
 app.UseHsts();
 

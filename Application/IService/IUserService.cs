@@ -8,5 +8,7 @@ namespace Application.IService
         Task<ServiceResponse<ViewUserDTO>> GetUserById(int id);
         Task<ServiceResponse<string>> UpdateUser(int id, UpdateUserDTO user);
         Task<ServiceResponse<string>> DeleteUser(int id);
+
+        Task<ServiceResponse<List<ViewUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender);
     }
 }

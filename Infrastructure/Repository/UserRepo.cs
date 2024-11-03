@@ -1,7 +1,8 @@
 ﻿using Application.IRepository;
-using Infrastructure.Models;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 
 namespace Infrastructure.Repository
 {
@@ -65,15 +66,69 @@ namespace Infrastructure.Repository
 
             return user;
         }
-    
 
 
 
-    public async Task<User> GetUserByEmailAsync(string email)
+
+        public async Task<User> GetUserByEmailAsync(string email)
         {
             var user = await _dbContext.Users
                  .FirstOrDefaultAsync(record => record.Email == email);
             return user is null ? throw new Exception("Email is not correct") : user;
         }
+        public async Task<List<User>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
+        {
+            // Validate input parameters
+            if (zodiacIds == null || zodiacIds.Length == 0)
+            {
+                throw new ArgumentException("Zodiac IDs cannot be null or empty", nameof(zodiacIds));
+            }
+
+            if (string.IsNullOrWhiteSpace(gender))
+            {
+                throw new ArgumentException("Gender cannot be null or empty", nameof(gender));
+            }
+
+            // Normalize gender to lowercase for case-insensitive comparison
+            string normalizedGender = gender.ToLower();
+
+            // Retrieve users based on zodiac IDs and gender
+            var users = await _dbContext.Users
+                .Where(u => zodiacIds.Contains(u.ZodiacId.GetValueOrDefault()) &&
+                            u.Gender.ToLower() == normalizedGender)
+                .Include(u => u.Zodiac) // Ensure Zodiac is included
+                .ToListAsync();
+
+            // Check if Zodiac information is retrieved
+            foreach (var user in users)
+            {
+                if (user.Zodiac == null)
+                {
+                    Console.WriteLine($"User: {user.FullName}, ZodiacId: {user.ZodiacId} - Zodiac data not found.");
+                }
+                else
+                {
+                    Console.WriteLine($"User: {user.FullName}, ZodiacId: {user.ZodiacId}, NameZodiac: {user.Zodiac.NameZodiac}, Description: {user.Zodiac.DesZodiac}");
+                }
+            }
+
+            // Check if we have at least 1 user available
+            if (users.Count == 0)
+            {
+                throw new Exception("No users available for the specified criteria");
+            }
+
+            // Randomly select up to 8 users
+            var selectedUsersCount = Math.Min(8, users.Count);
+            var selectedUsers = users.OrderBy(_ => Guid.NewGuid()).Take(selectedUsersCount).ToList();
+
+            return selectedUsers;
+        }
+
+
+
+
     }
 }
+
+

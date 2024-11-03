@@ -5,7 +5,7 @@ using Application.ServiceResponse;
 using Application.Ultils;
 using Application.ViewModels.AuthenDTO;
 using AutoMapper;
-using Infrastructure.Models;
+using Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System.Data.Common;
 
@@ -165,7 +165,7 @@ namespace Application.Service
                 await _userRepo.AddAsync(userAccountRegister);
 
                 var confirmationLink =
-                    $"https://localhost:7032/swagger/confirm?token={userAccountRegister.ConfirmationToken}";
+                    $"https://starmate-g8dkcraeardagdfb.canadacentral-01.azurewebsites.net/confirm?token={userAccountRegister.ConfirmationToken}";
 
                 //SendMail
                 var emailSend = await SendEmail.SendConfirmationEmail(userObject.Email, confirmationLink);

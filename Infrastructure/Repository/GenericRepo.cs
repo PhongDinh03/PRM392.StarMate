@@ -1,6 +1,5 @@
 ﻿
 using Application.IRepository;
-using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 
