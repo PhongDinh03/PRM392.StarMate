@@ -35,6 +35,9 @@ namespace StarMate.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Send friend request.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<FriendResDTO>>> CreateFriend([FromBody] FriendReqDTO createForm)
         {
@@ -42,6 +45,9 @@ namespace StarMate.Controllers
             return CreatedAtAction(nameof(GetFriendById), new { id = response.Data.Id }, response);
         }
 
+        /// <summary>
+        /// Update  friend .
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<ServiceResponse<FriendResDTO>>> UpdateFriend(int id, [FromBody] FriendReqDTO updateForm)
         {
@@ -59,10 +65,12 @@ namespace StarMate.Controllers
             if (!response.Data)
                 return NotFound(response);  
 
-            return Ok(response);  
+            return Ok(response);
         }
 
-
+        /// <summary>
+        /// Get friend by user id.
+        /// </summary>
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<ServiceResponse<List<FriendResDTO>>>> GetFriendByUserId(int userId)
         {
@@ -71,7 +79,21 @@ namespace StarMate.Controllers
                 return NotFound(response);
             return Ok(response);
         }
+        /// <summary>
+        /// Get friend request by user id.
+        /// </summary>
+        [HttpGet("FriendRequest/{userId}")]
+        public async Task<ActionResult<ServiceResponse<List<FriendResDTO>>>> GetFriendRequestByUserId(int userId)
+        {
+            var response = await _friendService.GetFriendRequestByUserId(userId);
+            if (response.Data == null || response.Data.Count == 0)
+                return NotFound(response);
+            return Ok(response);
+        }
 
+        /// <summary>
+        /// Accept friend request.
+        /// </summary>
         [HttpPut("status/{userId}/{friendId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateFriendshipStatus(int userId, int friendId)
         {

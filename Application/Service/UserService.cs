@@ -120,7 +120,8 @@ namespace Application.Service
                         Password = user.Password,
                         TelephoneNumber = user.TelephoneNumber,
                         ZodiacId = user.ZodiacId ?? 0,
-                        NameZodiac = user.Zodiac?.NameZodiac ?? "Unknown", // Handle null case
+                        Gender = user.Gender,
+                        NameZodiac = user.Zodiac?.NameZodiac ?? "Unknown", 
                         Decription = user.Zodiac?.DesZodiac
                     }).ToList();
 
