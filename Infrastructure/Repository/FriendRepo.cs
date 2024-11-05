@@ -58,6 +58,30 @@ namespace Infrastructure.Repository
         }
 
 
+        public async Task<List<Friend>> GetFriendRequest(int userId)
+        {
+            // Validate user ID
+            if (userId <= 0)
+            {
+                throw new ArgumentException("Invalid user ID.", nameof(userId));
+            }
+
+            // Retrieve friends and include the FriendUser details
+            var friends = await _context.Friends
+                .Include(f => f.FriendNavigation)
+                .ThenInclude(u => u.Zodiac)// Include friend user details
+                .Where(f => f.UserId == userId && f.Status == true && f.FriendNavigation.Status == 0)
+                .ToListAsync();
+
+            // Check if no friends were found
+            if (friends == null || !friends.Any())
+            {
+                Console.WriteLine($"No friends found for user ID: {userId}");
+            }
+
+            return friends; // Return the list of friends
+        }
+
         public async Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId)
         {
             return await _context.Friends

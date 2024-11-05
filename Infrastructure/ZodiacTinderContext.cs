@@ -44,7 +44,7 @@ public partial class ZodiacTinderContext : DbContext
             entity.ToTable("LikeZodiac");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("id");
 
             entity.HasOne(d => d.User).WithMany(p => p.LikeZodiacs)

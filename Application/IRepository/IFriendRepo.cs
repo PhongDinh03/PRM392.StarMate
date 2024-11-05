@@ -7,6 +7,8 @@ public interface IFriendRepo : IGenericRepo<Friend>
     Task<Friend?> GetFById(int userId);
     Task<List<Friend?>> GetFByUserId(int userId);
 
+    Task<List<Friend?>> GetFriendRequest(int userId);
+
     Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId);
 
     Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool status);
