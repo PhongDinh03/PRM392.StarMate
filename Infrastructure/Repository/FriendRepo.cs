@@ -1,4 +1,5 @@
-﻿using Application.IRepository;
+﻿using Application.Enums;
+using Application.IRepository;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,7 @@ namespace Infrastructure.Repository
             var friends = await _context.Friends
                 .Include(f => f.FriendNavigation)
                 .ThenInclude(u => u.Zodiac)// Include friend user details
-                .Where(f => f.UserId == userId &&  f.Status == 1 && f.FriendNavigation.Status == 1)
+                .Where(f => f.UserId == userId && f.Status == 1 && f.FriendNavigation.Status == 1)
                 .ToListAsync();
 
             // Check if no friends were found
@@ -83,38 +84,19 @@ namespace Infrastructure.Repository
             }
             catch (Exception ex)
             {
-   
+
                 throw; // or return null; depending on your error handling strategy
             }
         }
 
-
-        public async Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool status)
+        public async Task<bool> UpdateFriendshipStatus(int userId, int friendId, Status status)
         {
-            // Fetch the friendship record from the database
             var friendship = await _context.Friends
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+        .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
 
             if (friendship != null)
             {
-                // Update the status
-                friendship.Status = 1; // Ensure property name matches your model
-                _context.Friends.Update(friendship); // Mark the entity as modified
-                await _context.SaveChangesAsync(); // Save changes to the database
-                return true; // Indicate that the update was successful
-            }
-
-            return false; // Indicate that the friendship was not found
-        }
-
-        public async Task<bool> DeclineFriendshipStatus(int userId, int friendId, int status)
-        {
-            var friendship = await _context.Friends
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
-
-            if (friendship != null)
-            {
-                friendship.Status = status;
+                friendship.Status = (byte)status; // Convert enum to byte
                 _context.Friends.Update(friendship);
                 await _context.SaveChangesAsync();
                 return true;

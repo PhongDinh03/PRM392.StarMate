@@ -3,8 +3,9 @@ namespace Application.Enums
 {
     public enum Status : byte
     {
-        Declined = 2,
+        Inactive = 0,
         Active = 1,
-        Inactive = 0
+        Accepted = 2,
+        Declined = 3
     }
 }

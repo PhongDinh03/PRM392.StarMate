@@ -1,10 +1,8 @@
-﻿
-using Application.IRepository;
+﻿using Application.IRepository;
 using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels.UserDTO;
 using AutoMapper;
-using Domain.Models;
 
 namespace Application.Service
 {
@@ -58,6 +56,7 @@ namespace Application.Service
                     var userDTO = _mapper.Map<ViewUserDTO>(user);
                     serviceResponse.Data = userDTO;
                     serviceResponse.Success = true;
+                    serviceResponse.Message = "User retrieved successfully";
                 }
             }
             catch (Exception ex)
@@ -82,8 +81,13 @@ namespace Application.Service
                     serviceResponse.Message = "User not found";
                     return serviceResponse;
                 }
-                var userEntity = _mapper.Map<User>(user);
-                await _userRepo.Update(userEntity);
+                existingUser.FullName = user.FullName;
+                existingUser.Email = user.Email;
+                existingUser.TelephoneNumber = user.TelephoneNumber ?? existingUser.TelephoneNumber;
+                existingUser.ZodiacId = user.ZodiacId;
+                existingUser.Description = user.Decription;
+
+                await _userRepo.Update(existingUser);
 
                 serviceResponse.Success = true;
                 serviceResponse.Message = "User updated successfully";

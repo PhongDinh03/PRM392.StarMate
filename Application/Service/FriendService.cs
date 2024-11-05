@@ -35,7 +35,7 @@ namespace Application.Services
                     Id = c.Id,
                     UserId = c.UserId,
                     FriendId = c.FriendId,
-                    
+
                     ZodiacName = c.FriendNavigation.Zodiac.NameZodiac
                 }).ToList();
 
@@ -70,10 +70,10 @@ namespace Application.Services
                 {
                     var resFriend = new FriendResDTO
                     {
-                    Id = friend.Id,
-                    UserId=friend.UserId,
-                    FriendId = friend.FriendId,
-                    ZodiacName = friend.FriendNavigation.Zodiac.NameZodiac
+                        Id = friend.Id,
+                        UserId = friend.UserId,
+                        FriendId = friend.FriendId,
+                        ZodiacName = friend.FriendNavigation.Zodiac.NameZodiac
                     };
 
                     result.Data = resFriend;
@@ -274,59 +274,6 @@ namespace Application.Services
             return result;
         }
 
-
-
-        public async Task<ServiceResponse<bool>> UpdateFriendshipStatus(int userId, int friendId)
-        {
-            var result = new ServiceResponse<bool>();
-            try
-            {
-                // Ensure status is set to true (active)
-                bool newStatus = true; // Assuming true indicates an active friendship
-
-                // Call the repository method to update the friendship status
-                var isUpdated = await _Repo.UpdateFriendshipStatus(userId, friendId, newStatus);
-
-                // Optionally, check the response from the repository
-                if (isUpdated)
-                {
-                    // Optionally update the status for the reverse friendship (friendId to userId)
-                    var isUpdatedReverse = await _Repo.UpdateFriendshipStatus(friendId, userId, newStatus);
-
-                    // Check if the reverse update was successful
-                    if (!isUpdatedReverse)
-                    {
-                        // Handle case where the reverse friendship was not found or not updated
-                        result.Success = true; // Still consider the operation successful since the main update worked
-                        result.Message = "Friendship status updated for one direction, but not for the reverse!";
-                        result.Data = true; // Return true as the primary update was successful
-                    }
-                    else
-                    {
-                        result.Success = true;
-                        result.Message = "Friendship status updated successfully in both directions!";
-                        result.Data = true; // Return true if the update was successful for both
-                    }
-                }
-                else
-                {
-                    result.Success = false;
-                    result.Message = "Friendship not found or status update failed!";
-                    result.Data = false; // Return false if the update was not successful
-                }
-            }
-            catch (Exception e)
-            {
-                result.Success = false;
-                result.Message = e.InnerException != null
-                    ? $"{e.InnerException.Message}\n{e.StackTrace}"
-                    : $"{e.Message}\n{e.StackTrace}";
-            }
-
-            return result;
-        }
-
-
         public async Task<ServiceResponse<List<FriendResDTO>>> GetFriendRequestByUserId(int userId)
         {
             var result = new ServiceResponse<List<FriendResDTO>>();
@@ -375,13 +322,44 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<ServiceResponse<bool>> AcceptFriendRequest(int userId, int friendId)
+        {
+            var result = new ServiceResponse<bool>();
+            try
+            {
+                // Use the enum value for "accepted" status
+                bool isAccepted = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Accepted);
+
+                if (isAccepted)
+                {
+                    result.Success = true;
+                    result.Message = "Friend request accepted successfully.";
+                    result.Data = true;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = "Friendship not found or accept update failed!";
+                    result.Data = false;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Success = false;
+                result.Message = e.InnerException != null
+                    ? $"{e.InnerException.Message}\n{e.StackTrace}"
+                    : $"{e.Message}\n{e.StackTrace}";
+            }
+            return result;
+        }
+
         public async Task<ServiceResponse<bool>> DeclineFriendRequest(int userId, int friendId)
         {
             var result = new ServiceResponse<bool>();
             try
             {
                 // Use the enum value for "declined" status
-                bool isDeclined = await _Repo.DeclineFriendshipStatus(userId, friendId, (int)Status.Declined);
+                bool isDeclined = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Declined);
 
                 if (isDeclined)
                 {

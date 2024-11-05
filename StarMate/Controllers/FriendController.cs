@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Application.ServiceResponse;
 using Application.ViewModels.FriendDTO;
 using Application.IService;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace StarMate.Controllers
 {
@@ -92,17 +89,24 @@ namespace StarMate.Controllers
         }
 
         /// <summary>
-        /// Accept friend request.
+        /// Accept a friend request.
         /// </summary>
-        [HttpPut("status/{userId}/{friendId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateFriendshipStatus(int userId, int friendId)
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="friendId">The ID of the friend.</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
+        [HttpPut("accept")]
+        public async Task<IActionResult> AcceptFriendRequest(int userId, int friendId)
         {
-            var response = await _friendService.UpdateFriendshipStatus(userId, friendId);
+            var response = await _friendService.AcceptFriendRequest(userId, friendId);
 
-            if (!response.Success)
-                return NotFound(response);
-
-            return Ok(response);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
         }
 
         /// <summary>
