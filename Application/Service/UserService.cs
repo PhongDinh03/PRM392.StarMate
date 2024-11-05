@@ -97,9 +97,9 @@ namespace Application.Service
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<ViewUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
+        public async Task<ServiceResponse<List<ViewFullUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
         {
-            var serviceResponse = new ServiceResponse<List<ViewUserDTO>>();
+            var serviceResponse = new ServiceResponse<List<ViewFullUserDTO>>();
 
             try
             {
@@ -113,8 +113,9 @@ namespace Application.Service
                 else
                 {
                     // Manually create ViewUserDTO list to include Zodiac details
-                    serviceResponse.Data = users.Select(user => new ViewUserDTO
+                    serviceResponse.Data = users.Select(user => new ViewFullUserDTO
                     {
+                        Id = user.Id,
                         FullName = user.FullName,
                         Email = user.Email,
                         Password = user.Password,
