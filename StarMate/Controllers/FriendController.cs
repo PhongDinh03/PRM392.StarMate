@@ -38,9 +38,20 @@ namespace StarMate.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<FriendResDTO>>> CreateFriend([FromBody] FriendReqDTO createForm)
         {
-            var response = await _friendService.CreateFriend(createForm);
-            return CreatedAtAction(nameof(GetFriendById), new { id = response.Data.Id }, response);
+            var result = await _friendService.CreateFriend(createForm);
+
+            // Check if the creation was successful
+            if (!result.Success)
+            {
+                // Return a 400 Bad Request response with the error message if unsuccessful
+                return BadRequest(result);
+            }
+
+            // Return a 200 OK response with the result if successful
+            return Ok(result);
         }
+
+
 
         /// <summary>
         /// Update  friend .

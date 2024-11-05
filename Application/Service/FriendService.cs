@@ -328,18 +328,19 @@ namespace Application.Services
             try
             {
                 // Use the enum value for "accepted" status
-                bool isAccepted = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Accepted);
+                bool isAcceptedOriginal = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Accepted);
+                bool isAcceptedReversed = await _Repo.UpdateFriendshipStatus(friendId, userId, Status.Accepted);
 
-                if (isAccepted)
+                if (isAcceptedOriginal && isAcceptedReversed)
                 {
                     result.Success = true;
-                    result.Message = "Friend request accepted successfully.";
+                    result.Message = "Friend request accepted successfully in both directions.";
                     result.Data = true;
                 }
                 else
                 {
                     result.Success = false;
-                    result.Message = "Friendship not found or accept update failed!";
+                    result.Message = "Friendship not found or accept update failed in one or both directions!";
                     result.Data = false;
                 }
             }
@@ -350,8 +351,10 @@ namespace Application.Services
                     ? $"{e.InnerException.Message}\n{e.StackTrace}"
                     : $"{e.Message}\n{e.StackTrace}";
             }
+
             return result;
         }
+
 
         public async Task<ServiceResponse<bool>> DeclineFriendRequest(int userId, int friendId)
         {
@@ -359,18 +362,19 @@ namespace Application.Services
             try
             {
                 // Use the enum value for "declined" status
-                bool isDeclined = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Declined);
+                bool isDeclinedOriginal = await _Repo.UpdateFriendshipStatus(userId, friendId, Status.Declined);
+                bool isDeclinedReversed = await _Repo.UpdateFriendshipStatus(friendId, userId, Status.Declined);
 
-                if (isDeclined)
+                if (isDeclinedOriginal && isDeclinedReversed)
                 {
                     result.Success = true;
-                    result.Message = "Friend request declined successfully.";
+                    result.Message = "Friend request declined successfully in both directions.";
                     result.Data = true;
                 }
                 else
                 {
                     result.Success = false;
-                    result.Message = "Friendship not found or decline update failed!";
+                    result.Message = "Friendship not found or decline update failed in one or both directions!";
                     result.Data = false;
                 }
             }
@@ -384,5 +388,6 @@ namespace Application.Services
 
             return result;
         }
+
     }
 }

@@ -77,17 +77,27 @@ namespace Infrastructure.Repository
 
         public async Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId)
         {
+            if (userId <= 0 || friendId <= 0)
+                throw new ArgumentException("User ID and Friend ID must be positive integers.");
+
+            if (userId == friendId)
+                throw new ArgumentException("User cannot be friends with themselves.");
+
             try
             {
                 return await _context.Friends
-                    .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+                    .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId && f.Status != 1);
             }
             catch (Exception ex)
             {
+                // Log the exception details (optional, if logging is configured)
+                Console.WriteLine($"Error fetching friendship data: {ex.Message}");
 
-                throw; // or return null; depending on your error handling strategy
+                // Rethrow as a custom exception if preferred
+                throw new ApplicationException("An error occurred while retrieving friendship data.", ex);
             }
         }
+
 
         public async Task<bool> UpdateFriendshipStatus(int userId, int friendId, Status status)
         {

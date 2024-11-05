@@ -76,7 +76,7 @@ namespace Infrastructure.Repository
                  .FirstOrDefaultAsync(record => record.Email == email);
             return user is null ? throw new Exception("Email is not correct") : user;
         }
-        public async Task<List<User>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
+        public async Task<List<User>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender, int userId)
         {
             // Validate input parameters
             if (zodiacIds == null || zodiacIds.Length == 0)
@@ -92,10 +92,11 @@ namespace Infrastructure.Repository
             // Normalize gender to lowercase for case-insensitive comparison
             string normalizedGender = gender.ToLower();
 
-            // Retrieve users based on zodiac IDs and gender
+            // Retrieve users based on zodiac IDs and gender, excluding the specified userId
             var users = await _dbContext.Users
                 .Where(u => zodiacIds.Contains(u.ZodiacId.GetValueOrDefault()) &&
-                            u.Gender.ToLower() == normalizedGender)
+                            u.Gender.ToLower() == normalizedGender &&
+                            u.Id != userId)  // Exclude the specified userId
                 .Include(u => u.Zodiac)
                 .ToListAsync();
 
@@ -124,6 +125,7 @@ namespace Infrastructure.Repository
 
             return selectedUsers;
         }
+
 
 
 
