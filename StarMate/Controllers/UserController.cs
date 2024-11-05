@@ -72,9 +72,9 @@ namespace StarMate.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("random")]
-        public async Task<IActionResult> GetRandomUsersByZodiacAndGender([FromQuery] int[] zodiacIds, [FromQuery] string gender)
+        public async Task<IActionResult> GetRandomUsersByZodiacAndGender([FromQuery] int[] zodiacIds, [FromQuery] string gender, int userId)
         {
-            var response = await _userService.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender);
+            var response = await _userService.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender, userId);
             if (response.Data == null || !response.Data.Any())
             {
                 return NotFound(new { message = response.Message });

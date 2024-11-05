@@ -101,13 +101,13 @@ namespace Application.Service
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<ViewFullUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender)
+        public async Task<ServiceResponse<List<ViewFullUserDTO>>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender, int userId)
         {
             var serviceResponse = new ServiceResponse<List<ViewFullUserDTO>>();
 
             try
             {
-                var users = await _userRepo.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender);
+                var users = await _userRepo.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender,userId);
 
                 if (users == null || !users.Any())
                 {
