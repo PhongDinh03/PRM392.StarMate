@@ -45,7 +45,7 @@ namespace Infrastructure.Repository
             var friends = await _context.Friends
                 .Include(f => f.FriendNavigation)
                 .ThenInclude(u => u.Zodiac)// Include friend user details
-                .Where(f => f.UserId == userId &&  f.Status == true && f.FriendNavigation.Status == 1)
+                .Where(f => f.UserId == userId &&  f.Status == 1 && f.FriendNavigation.Status == 1)
                 .ToListAsync();
 
             // Check if no friends were found
@@ -70,7 +70,7 @@ namespace Infrastructure.Repository
             var friends = await _context.Friends
                 .Include(f => f.FriendNavigation)
                 .ThenInclude(u => u.Zodiac)// Include friend user details
-                .Where(f => f.UserId == userId && f.Status == false && f.FriendNavigation.Status == 1)
+                .Where(f => f.UserId == userId && f.Status == 0 && f.FriendNavigation.Status == 1)
                 .ToListAsync();
 
             // Check if no friends were found
@@ -84,9 +84,18 @@ namespace Infrastructure.Repository
 
         public async Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId)
         {
-            return await _context.Friends
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+            try
+            {
+                return await _context.Friends
+                    .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+            }
+            catch (Exception ex)
+            {
+   
+                throw; // or return null; depending on your error handling strategy
+            }
         }
+
 
         public async Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool status)
         {
@@ -97,7 +106,7 @@ namespace Infrastructure.Repository
             if (friendship != null)
             {
                 // Update the status
-                friendship.Status = status; // Ensure property name matches your model
+                friendship.Status = 1; // Ensure property name matches your model
                 _context.Friends.Update(friendship); // Mark the entity as modified
                 await _context.SaveChangesAsync(); // Save changes to the database
                 return true; // Indicate that the update was successful
