@@ -1,4 +1,5 @@
 ﻿
+using Application.Enums;
 using Application.IRepository;
 using Application.IService;
 using Application.ServiceResponse;
@@ -364,7 +365,7 @@ namespace Application.Services
                     FriendId = c.FriendId,
                     FriendGender = c.FriendNavigation?.Gender ?? "Unknown",
                     FriendName = c.FriendNavigation?.FullName ?? "Unknown", // Check for null and provide a default
-                    ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown" // Check for null and provide a default
+                    ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown", // Check for null and provide a default
                 }).ToList();
 
                 // Set the response data
