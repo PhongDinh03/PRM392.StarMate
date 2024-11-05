@@ -1,15 +1,10 @@
-﻿
+﻿using Application.Enums;
 using Application.IRepository;
 using Application.IService;
 using Application.ServiceResponse;
 using Application.ViewModels.FriendDTO;
 using AutoMapper;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -380,6 +375,36 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<ServiceResponse<bool>> DeclineFriendRequest(int userId, int friendId)
+        {
+            var result = new ServiceResponse<bool>();
+            try
+            {
+                // Use the enum value for "declined" status
+                bool isDeclined = await _Repo.DeclineFriendshipStatus(userId, friendId, (int)Status.Declined);
 
+                if (isDeclined)
+                {
+                    result.Success = true;
+                    result.Message = "Friend request declined successfully.";
+                    result.Data = true;
+                }
+                else
+                {
+                    result.Success = false;
+                    result.Message = "Friendship not found or decline update failed!";
+                    result.Data = false;
+                }
+            }
+            catch (Exception e)
+            {
+                result.Success = false;
+                result.Message = e.InnerException != null
+                    ? $"{e.InnerException.Message}\n{e.StackTrace}"
+                    : $"{e.Message}\n{e.StackTrace}";
+            }
+
+            return result;
+        }
     }
 }

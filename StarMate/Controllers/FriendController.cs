@@ -105,5 +105,24 @@ namespace StarMate.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Decline a friend request.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="friendId">The ID of the friend.</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
+        [HttpPut("decline")]
+        public async Task<IActionResult> DeclineFriendRequest(int userId, int friendId)
+        {
+            var response = await _friendService.DeclineFriendRequest(userId, friendId);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+        }
     }
 }

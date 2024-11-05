@@ -1,10 +1,5 @@
 ﻿using Application.ServiceResponse;
 using Application.ViewModels.FriendDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.IService
 {
@@ -22,5 +17,6 @@ namespace Application.IService
 
         public Task<ServiceResponse<List<FriendResDTO>>> GetFriendRequestByUserId(int id);
         Task<ServiceResponse<bool>> UpdateFriendshipStatus(int userId, int friendId);
+        Task<ServiceResponse<bool>> DeclineFriendRequest(int userId, int friendId);
     }
 }

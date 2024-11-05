@@ -1,14 +1,6 @@
-﻿
-using Application.IRepository;
+﻿using Application.IRepository;
 using Domain.Models;
-using Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Infrastructure.Repository
@@ -45,7 +37,7 @@ namespace Infrastructure.Repository
             var friends = await _context.Friends
                 .Include(f => f.FriendNavigation)
                 .ThenInclude(u => u.Zodiac)// Include friend user details
-                .Where(f => f.UserId == userId &&  f.Status == true && f.FriendNavigation.Status == 1)
+                .Where(f => f.UserId == userId && f.Status == true && f.FriendNavigation.Status == 1)
                 .ToListAsync();
 
             // Check if no friends were found
@@ -106,7 +98,21 @@ namespace Infrastructure.Repository
             return false; // Indicate that the friendship was not found
         }
 
+        public async Task<bool> DeclineFriendshipStatus(int userId, int friendId, int status)
+        {
+            var friendship = await _context.Friends
+                .FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
 
+            if (friendship != null)
+            {
+                friendship.Status = status;
+                _context.Friends.Update(friendship);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 
 }

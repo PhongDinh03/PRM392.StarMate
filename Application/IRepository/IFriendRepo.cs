@@ -11,7 +11,8 @@ public interface IFriendRepo : IGenericRepo<Friend>
 
     Task<Friend?> GetFriendshipByUserAndFriendId(int userId, int friendId);
 
-    Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool status);
+    Task<bool> DeclineFriendshipStatus(int userId, int friendId, int status);
+    Task<bool> UpdateFriendshipStatus(int userId, int friendId, bool declined);
     //Task<Booking?> GetBookingByUser(string userId);
 
 }
