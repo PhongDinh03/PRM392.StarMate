@@ -23,5 +23,7 @@ namespace Application.ViewModels.UserDTO
         public string Gender { get; set; }
         public string NameZodiac { get; set; }
         public string? Decription { get; set; }
+
+      
     }
 }

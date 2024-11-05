@@ -96,7 +96,7 @@ namespace Infrastructure.Repository
             var users = await _dbContext.Users
                 .Where(u => zodiacIds.Contains(u.ZodiacId.GetValueOrDefault()) &&
                             u.Gender.ToLower() == normalizedGender)
-                .Include(u => u.Zodiac) // Ensure Zodiac is included
+                .Include(u => u.Zodiac)
                 .ToListAsync();
 
             // Check if Zodiac information is retrieved

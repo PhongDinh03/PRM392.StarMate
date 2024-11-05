@@ -133,7 +133,7 @@ namespace Application.Services
 
             // Create the new friendship
             var newFriend = _mapper.Map<Friend>(createForm);
-            newFriend.Status = false; // Set the status to false (0)
+            newFriend.Status = 0; // Set the status to false (0)
 
             // Add the new friend relationship
             await _Repo.AddAsync(newFriend);
@@ -146,7 +146,7 @@ namespace Application.Services
                 {
                     UserId = createForm.FriendId,
                     FriendId = createForm.UserId,
-                    Status = false // Set status as needed
+                    Status = 0 // Set status as needed
                 };
 
                 await _Repo.AddAsync(reciprocalFriend);
@@ -359,7 +359,7 @@ namespace Application.Services
                     FriendId = c.FriendId,
                     FriendGender = c.FriendNavigation?.Gender ?? "Unknown",
                     FriendName = c.FriendNavigation?.FullName ?? "Unknown", // Check for null and provide a default
-                    ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown" // Check for null and provide a default
+                    ZodiacName = c.FriendNavigation?.Zodiac?.NameZodiac ?? "Unknown", // Check for null and provide a default
                 }).ToList();
 
                 // Set the response data
