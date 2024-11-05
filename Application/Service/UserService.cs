@@ -118,12 +118,12 @@ namespace Application.Service
                         Id = user.Id,
                         FullName = user.FullName,
                         Email = user.Email,
-                        Password = user.Password,
                         TelephoneNumber = user.TelephoneNumber,
                         ZodiacId = user.ZodiacId ?? 0,
                         Gender = user.Gender,
                         NameZodiac = user.Zodiac?.NameZodiac ?? "Unknown", 
-                        Decription = user.Zodiac?.DesZodiac
+                        Decription = user.Zodiac?.DesZodiac,
+                        IsFriend = user.FriendFriendNavigations?.Any(f => f.Status == true) ?? false
                     }).ToList();
 
                     serviceResponse.Success = true;
