@@ -24,6 +24,6 @@ namespace Application.ViewModels.UserDTO
         public string NameZodiac { get; set; }
         public string? Decription { get; set; }
 
-        public bool? IsFriend { get; set; }
+      
     }
 }

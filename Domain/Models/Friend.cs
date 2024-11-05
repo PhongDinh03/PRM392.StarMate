@@ -11,7 +11,7 @@ public  class Friend
 
     public int FriendId { get; set; }
 
-    public bool? Status { get; set; }
+    public byte? Status { get; set; }
 
     public virtual User FriendNavigation { get; set; } = null!;
 
