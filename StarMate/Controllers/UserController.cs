@@ -18,8 +18,8 @@ namespace StarMate.Controllers
         /// </summary>
         /// <param name="id">The ID of the user to retrieve.</param>
         /// <returns>An ActionResult containing the user data or a NotFound result.</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ViewUserDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ViewUserDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -37,17 +37,17 @@ namespace StarMate.Controllers
         /// <param name="id">The ID of the user to update.</param>
         /// <param name="user">The user data to update.</param>
         /// <returns>An ActionResult containing the result of the update operation.</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(UpdateUserDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateUserDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO user)
         {
             var response = await _userService.UpdateUser(id, user);
-            if (response.Data == null)
+            if (response.Success)
             {
-                return NotFound(response);
+                return Ok(response);
             }
-            return Ok(response);
+            return NotFound(response);
         }
 
         /// <summary>
@@ -61,11 +61,7 @@ namespace StarMate.Controllers
         public async Task<ActionResult> DeleteUser(int id)
         {
             var response = await _userService.DeleteUser(id);
-            if (response.Data == null)
-            {
-                return NotFound(response);
-            }
-            return Ok(response);
+            return response.Success ? Ok(response) : NotFound(response);
         }
 
 
