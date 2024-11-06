@@ -133,7 +133,7 @@ namespace Application.Services
 
             // Create the new friendship
             var newFriend = _mapper.Map<Friend>(createForm);
-            newFriend.Status = 0; // Set the status to false (0)
+            newFriend.Status = 5; 
 
             // Add the new friend relationship
             await _Repo.AddAsync(newFriend);
@@ -146,7 +146,7 @@ namespace Application.Services
                 {
                     UserId = createForm.FriendId,
                     FriendId = createForm.UserId,
-                    Status = 0 // Set status as needed
+                    Status = 6 
                 };
 
                 await _Repo.AddAsync(reciprocalFriend);
@@ -322,6 +322,54 @@ namespace Application.Services
             return result;
         }
 
+
+        public async Task<ServiceResponse<List<FriendResDTO>>> GetFriendRequestIcomeByUserId(int userId)
+        {
+            var result = new ServiceResponse<List<FriendResDTO>>();
+
+            try
+            {
+                // Validate user ID
+                if (userId <= 0)
+                {
+                    throw new ArgumentException("Invalid user ID.", nameof(userId));
+                }
+
+                // Retrieve friends for the specified userId
+                var friends = await _Repo.GetFriendRequestIncome(userId);
+                Console.WriteLine($"Friends retrieved for UserId {userId}: {friends?.Count ?? 0}");
+
+                // Check if friends were found
+                if (friends == null || !friends.Any())
+                {
+                    result.Success = false;
+                    result.Message = $"No friends found for user ID: {userId}";
+                    return result;
+                }
+
+                // Map the friend list to FriendResDTO
+                var friendList = friends.Select(c => new FriendResDTO
+                {
+                    Id = c.Id,
+                    UserId = c.UserId,
+                    FriendId = c.FriendId,
+                    FriendGender = c.User?.Gender ?? "Unknown",
+                    FriendName = c.User?.FullName ?? "Unknown", // Check for null and provide a default
+                    ZodiacName = c.User?.Zodiac?.NameZodiac ?? "Unknown", // Check for null and provide a default
+                }).ToList();
+
+                // Set the response data
+                result.Data = friendList;
+                result.Success = true;
+            }
+            catch (Exception e)
+            {
+                result.Success = false;
+                result.Message = $"An error occurred while retrieving friends for user ID {userId}: {e.Message}\n{e.StackTrace}";
+            }
+
+            return result;
+        }
         public async Task<ServiceResponse<bool>> AcceptFriendRequest(int userId, int friendId)
         {
             var result = new ServiceResponse<bool>();

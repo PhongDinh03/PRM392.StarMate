@@ -12,6 +12,8 @@ namespace Application.IService
         public Task<ServiceResponse<bool>> DeleteFriend(int userId, int friendId);
         public Task<ServiceResponse<List<FriendResDTO>>> GetFriendByUserId(int id);
         public Task<ServiceResponse<List<FriendResDTO>>> GetFriendRequestByUserId(int id);
+
+        public Task<ServiceResponse<List<FriendResDTO>>> GetFriendRequestIcomeByUserId(int id);
         public Task<ServiceResponse<bool>> AcceptFriendRequest(int userId, int friendId);
         public Task<ServiceResponse<bool>> DeclineFriendRequest(int userId, int friendId);
     }
