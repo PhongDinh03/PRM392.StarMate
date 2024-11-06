@@ -10,5 +10,6 @@ namespace Application.IRepository
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserByConfirmationToken(string token);
         Task<List<User>> GetRandomUsersByZodiacAndGenderAsync(int[] zodiacIds, string gender, int userId);
+        Task<User?> GetUserById(int id);
     }
 }

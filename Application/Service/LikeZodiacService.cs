@@ -103,9 +103,9 @@ namespace Application.Service
             return response;
         }
 
-        public async Task<ServiceResponse<string>> UpdateLikeZodiacAsync(int id, CreateLikeZodiacDTO updateDto)
+        public async Task<ServiceResponse<LikeZodiacDTO>> UpdateLikeZodiacAsync(int id, CreateLikeZodiacDTO updateDto)
         {
-            var response = new ServiceResponse<string>();
+            var response = new ServiceResponse<LikeZodiacDTO>();
             try
             {
                 var likeZodiac = await _repository.GetByIdAsync(id);
@@ -117,6 +117,8 @@ namespace Application.Service
                 }
                 likeZodiac = _mapper.Map<LikeZodiac>(updateDto);
                 await _repository.Update(likeZodiac);
+
+                response.Data = _mapper.Map<LikeZodiacDTO>(likeZodiac);
                 response.Success = true;
                 response.Message = "LikeZodiac updated successfully";
             }

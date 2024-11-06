@@ -22,7 +22,7 @@ namespace Application.Service
 
             try
             {
-                var user =  await _userRepo.GetByIdAsync(id);
+                var user = await _userRepo.GetByIdAsync(id);
                 if (user != null)
                 {
                     _ = _userRepo.Remove(user);
@@ -45,7 +45,7 @@ namespace Application.Service
 
             try
             {
-                var user = await _userRepo.GetByIdAsync(id);
+                var user = await _userRepo.GetUserById(id);
                 if (user == null)
                 {
                     serviceResponse.Success = false;
@@ -68,9 +68,9 @@ namespace Application.Service
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<string>> UpdateUser(int id, UpdateUserDTO user)
+        public async Task<ServiceResponse<ViewUserDTO>> UpdateUser(int id, UpdateUserDTO user)
         {
-            var serviceResponse = new ServiceResponse<string>();
+            var serviceResponse = new ServiceResponse<ViewUserDTO>();
 
             try
             {
@@ -82,13 +82,13 @@ namespace Application.Service
                     return serviceResponse;
                 }
                 existingUser.FullName = user.FullName;
-                existingUser.Email = user.Email;
                 existingUser.TelephoneNumber = user.TelephoneNumber ?? existingUser.TelephoneNumber;
                 existingUser.ZodiacId = user.ZodiacId;
-                existingUser.Description = user.Decription;
+                existingUser.Description = user.Description;
 
                 await _userRepo.Update(existingUser);
 
+                serviceResponse.Data = _mapper.Map<ViewUserDTO>(existingUser);
                 serviceResponse.Success = true;
                 serviceResponse.Message = "User updated successfully";
             }
@@ -107,7 +107,7 @@ namespace Application.Service
 
             try
             {
-                var users = await _userRepo.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender,userId);
+                var users = await _userRepo.GetRandomUsersByZodiacAndGenderAsync(zodiacIds, gender, userId);
 
                 if (users == null || !users.Any())
                 {
@@ -127,7 +127,7 @@ namespace Application.Service
                         Gender = user.Gender,
                         NameZodiac = user.Zodiac?.NameZodiac ?? "Unknown",
                         Decription = user.Zodiac?.DesZodiac,
-                        
+
                     }).ToList();
 
                     serviceResponse.Success = true;

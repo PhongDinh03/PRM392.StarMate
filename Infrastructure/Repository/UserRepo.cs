@@ -1,8 +1,6 @@
 ﻿using Application.IRepository;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 namespace Infrastructure.Repository
 {
@@ -126,10 +124,12 @@ namespace Infrastructure.Repository
             return selectedUsers;
         }
 
-
-
-
-
+        public async Task<User?> GetUserById(int id)
+        {
+            var user = await _dbContext.Users.Include(u => u.Zodiac)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            return user ?? throw new Exception("User not found");
+        }
     }
 }
 

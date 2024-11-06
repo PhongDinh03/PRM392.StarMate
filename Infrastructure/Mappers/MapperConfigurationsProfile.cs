@@ -18,16 +18,20 @@ namespace Infrastructure.Mappers
             CreateMap<User, ResetPassDTO>();
             CreateMap<User, ViewUserDTO>()
            .ForMember(dest => dest.NameZodiac, opt => opt.MapFrom(src => src.Zodiac.NameZodiac))
-           .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Zodiac.DesZodiac));
-            CreateMap<User, ViewUserDTO>().ReverseMap();
+           .ReverseMap();
             CreateMap<Zodiac, ViewUserDTO>().ReverseMap();
             CreateMap<User, UpdateUserDTO>().ReverseMap();
             CreateMap<Friend, FriendReqDTO>().ReverseMap();
             CreateMap<Friend, FriendResDTO>()
-     .ForMember(dest => dest.FriendName, opt => opt.MapFrom(src => src.FriendNavigation.FullName))
-     .ForMember(dest => dest.ZodiacName, opt => opt.MapFrom(src => src.FriendNavigation.Zodiac.NameZodiac)) // Assuming ZodiacName exists
-     .ReverseMap();
-            CreateMap<LikeZodiac, LikeZodiacDTO>().ReverseMap();
+                .ForMember(dest => dest.FriendName, opt => opt.MapFrom(src => src.FriendNavigation.FullName))
+                .ForMember(dest => dest.ZodiacName, opt => opt.MapFrom(src => src.FriendNavigation.Zodiac.NameZodiac)) // Assuming ZodiacName exists
+                .ReverseMap();
+            CreateMap<LikeZodiac, LikeZodiacDTO>()
+                .ForMember(dest => dest.NameZodiac, opt => opt.MapFrom(src => src.ZodiacLike.NameZodiac))
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.User.Gender))
+                .ForMember(dest => dest.TelephoneNumber, opt => opt.MapFrom(src => src.User.TelephoneNumber)).ReverseMap();
             CreateMap<CreateLikeZodiacDTO, LikeZodiac>().ReverseMap();
 
 
