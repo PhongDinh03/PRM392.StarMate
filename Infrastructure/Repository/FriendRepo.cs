@@ -38,7 +38,7 @@ namespace Infrastructure.Repository
             var friends = await _context.Friends
                 .Include(f => f.FriendNavigation)
                 .ThenInclude(u => u.Zodiac)// Include friend user details
-                .Where(f => f.UserId == userId && f.Status == 1 && f.FriendNavigation.Status == 1)
+                .Where(f => f.UserId == userId && f.Status == 2 && f.FriendNavigation.Status == 1)
                 .ToListAsync();
 
             // Check if no friends were found
