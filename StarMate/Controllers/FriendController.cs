@@ -99,6 +99,19 @@ namespace StarMate.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Get friend request by user id as friend id.
+        /// </summary>
+        [HttpGet("FriendRequestIncome/{userId}")]
+        public async Task<ActionResult<ServiceResponse<List<FriendResDTO>>>> GetFriendRequestIncomeByUserId(int userId)
+        {
+            var response = await _friendService.GetFriendRequestIcomeByUserId(userId);
+            if (response.Data == null || response.Data.Count == 0)
+                return NotFound(response);
+            return Ok(response);
+        }
+
         /// <summary>
         /// Accept a friend request.
         /// </summary>
